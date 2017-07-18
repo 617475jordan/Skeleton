@@ -24,7 +24,7 @@ class CBodyBasics
 public:
 	CBodyBasics();
 	~CBodyBasics();
-	void                    Update();//获得骨架、背景二值图和深度信息
+	Mat                    Update();//获得骨架、背景二值图和深度信息
 	HRESULT                 InitializeDefaultSensor();//用于初始化kinect
 
 private:
@@ -44,6 +44,5 @@ private:
 	//显示图像的Mat
 	cv::Mat skeletonImg;
 	cv::Mat depthImg;
-	Mat elemet = getStructuringElement(MORPH_RECT, Size(3, 3), Point(-1, -1));
 };
 

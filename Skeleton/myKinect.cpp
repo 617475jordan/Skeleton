@@ -4,17 +4,18 @@
 /// Initializes the default Kinect sensor
 HRESULT CBodyBasics::InitializeDefaultSensor()
 {
-	//用于判断每次读取操作的成功与否
+	//make sure that the operation is ok
 	HRESULT hr;
 
-	//搜索kinect
+	//search for kinect
 	hr = GetDefaultKinectSensor(&m_pKinectSensor);
+
 	if (FAILED(hr))
 	{
 		return hr;
 	}
 
-	//找到kinect设备
+	//find kinect device
 	if (m_pKinectSensor)
 	{
 		// Initialize the Kinect and get coordinate mapper and the body reader
@@ -22,7 +23,7 @@ HRESULT CBodyBasics::InitializeDefaultSensor()
 		IDepthFrameSource* pDepthFrameSource = NULL;//读取深度信息
 		IBodyIndexFrameSource* pBodyIndexFrameSource = NULL;//读取背景二值图
 
-		//打开kinect
+		//Open kinect
 		hr = m_pKinectSensor->Open();
 
 		//coordinatemapper
@@ -59,7 +60,8 @@ HRESULT CBodyBasics::InitializeDefaultSensor()
 			hr = m_pKinectSensor->get_BodyIndexFrameSource(&pBodyIndexFrameSource);
 		}
 
-		if (SUCCEEDED(hr)){
+		if (SUCCEEDED(hr))
+		{
 			hr = pBodyIndexFrameSource->OpenReader(&m_pBodyIndexFrameReader);
 		}
 
@@ -87,7 +89,7 @@ HRESULT CBodyBasics::InitializeDefaultSensor()
 
 
 /// Main processing function
-void CBodyBasics::Update()
+Mat CBodyBasics::Update()
 {
 	//每次先清空skeletonImg
 	skeletonImg.setTo(0);
@@ -95,7 +97,7 @@ void CBodyBasics::Update()
 	//如果丢失了kinect，则不继续操作
 	if (!m_pBodyFrameReader)
 	{
-		return;
+		return skeletonImg;
 	}
 
 	IBodyFrame* pBodyFrame = NULL;//骨架信息
@@ -163,23 +165,23 @@ void CBodyBasics::Update()
 			hr = pBodyFrame->GetAndRefreshBodyData(_countof(ppBodies), ppBodies);
 		}
 
-		if (SUCCEEDED(hr))
+/*		if (SUCCEEDED(hr))
 		{
 			//对每一个IBody，我们找到他的骨架信息，并且画出来
 			ProcessBody(BODY_COUNT, ppBodies);
 		}
-
+   */
 		for (int i = 0; i < _countof(ppBodies); ++i)
 		{
 			SafeRelease(ppBodies[i]);//释放所有
 		}
 	}
 	SafeRelease(pBodyFrame);//必须要释放，否则之后无法获得新的frame数据
-
+	return skeletonImg;
 }
 
 /// Handle new body data
-void CBodyBasics::ProcessBody(int nBodyCount, IBody** ppBodies)
+void  CBodyBasics::ProcessBody(int nBodyCount, IBody** ppBodies)
 {
 	//记录操作结果是否成功
 	HRESULT hr;
@@ -218,9 +220,9 @@ void CBodyBasics::ProcessBody(int nBodyCount, IBody** ppBodies)
 					}
 
 
-					/*************************drwa skeleton line/
+					/*************************draw skeleton line***********************/
 					//------------------------hand state left-------------------------------
-/*					DrawHandState(depthSpacePosition[JointType_HandLeft], leftHandState);
+/*    				DrawHandState(depthSpacePosition[JointType_HandLeft], leftHandState);
 					DrawHandState(depthSpacePosition[JointType_HandRight], rightHandState);
 
 					//---------------------------body-------------------------------
@@ -261,44 +263,7 @@ void CBodyBasics::ProcessBody(int nBodyCount, IBody** ppBodies)
 			}
 		}
 	}
-	Mat tem,out;
-	out = skeletonImg;
-	cvtColor(out, out, CV_RGB2GRAY);
-	morphologyEx(out, tem, MORPH_CLOSE, elemet);
-	out = tem;
-
-	cv::imshow("skeletonImg", out);
-	cv::waitKey(5);
-
-	int nY20_thresh = 96;
-	threshold(out, tem, nY20_thresh, 255, THRESH_BINARY);
-	out = tem;
-	int numSkeleton = 0;
-	double begin_y = skeletonImg.rows * 1.0 / 3.0;
-	double end_y = skeletonImg.rows * 2.0 / 3.0;
-	double begin_x = skeletonImg.cols*1.0 / 3.0;
-	double end_x=skeletonImg.cols*2.0 / 3.0;
-	for (int k = begin_y; k < end_y; k++)
-	{
-		for (int j = begin_x; j < end_x; j++)
-		{
-			if (out.at<uchar>( j,k)==0)
-			{
-				numSkeleton++;
-			}
-		}
-	}	
-	if (numSkeleton>100)
-	{
-		cout << "People come in" << endl;
-	}
-	else
-	{
-		cout << "No People" << endl;
-	} 
-
-	tem.release();
-	out.release();
+	//return skeletonImg;
 }
 
 
@@ -309,20 +274,20 @@ void CBodyBasics::DrawHandState(const DepthSpacePoint depthSpacePosition, HandSt
 	CvScalar color;
 	switch (handState){
 	case HandState_Open:
-		color = cvScalar(255, 0, 0);
+		color = Scalar(255, 0, 0);
 		break;
 	case HandState_Closed:
-		color = cvScalar(0, 255, 0);
+		color = Scalar(0, 255, 0);
 		break;
 	case HandState_Lasso:
-		color = cvScalar(0, 0, 255);
+		color = Scalar(0, 0, 255);
 		break;
 	default://如果没有确定的手势，就不要画
 		return;
 	}
 
 	circle(skeletonImg,
-		cvPoint(depthSpacePosition.X, depthSpacePosition.Y),
+		Point(depthSpacePosition.X, depthSpacePosition.Y),
 		20, color, -1);
 }
 
@@ -345,19 +310,21 @@ void CBodyBasics::DrawBone(const Joint* pJoints, const DepthSpacePoint* depthSpa
 		return;
 	}
 
-	CvPoint p1 = cvPoint(depthSpacePosition[joint0].X, depthSpacePosition[joint0].Y),
-		p2 = cvPoint(depthSpacePosition[joint1].X, depthSpacePosition[joint1].Y);
+//	CvPoint p1 = cvPoint(depthSpacePosition[joint0].X, depthSpacePosition[joint0].Y),
+//		p2 = cvPoint(depthSpacePosition[joint1].X, depthSpacePosition[joint1].Y);
 
+	Point p1 = Point(depthSpacePosition[joint0].X, depthSpacePosition[joint0].Y),
+		p2 = Point(depthSpacePosition[joint1].X, depthSpacePosition[joint1].Y);
 	// We assume all drawn bones are inferred unless BOTH joints are tracked
 	if ((joint0State == TrackingState_Tracked) && (joint1State == TrackingState_Tracked))
 	{
 		//非常确定的骨架，用白色直线
-		line(skeletonImg, p1, p2, cvScalar(255, 255, 255));
+		line(skeletonImg, p1, p2, Scalar(255, 255, 255));
 	}
 	else
 	{
 		//不确定的骨架，用红色直线
-		line(skeletonImg, p1, p2, cvScalar(0, 0, 255));
+		line(skeletonImg, p1, p2, Scalar(0, 0, 255));
 	}
 }
 
@@ -373,7 +340,8 @@ CBodyBasics::~CBodyBasics()
 {
 	SafeRelease(m_pBodyFrameReader);
 	SafeRelease(m_pCoordinateMapper);
-
+	SafeRelease(m_pDepthFrameReader);
+	SafeRelease(m_pBodyIndexFrameReader);
 	if (m_pKinectSensor)
 	{
 		m_pKinectSensor->Close();

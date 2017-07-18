@@ -78,10 +78,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="detect.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="myKinect.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="detect.h" />
     <ClInclude Include="myKinect.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

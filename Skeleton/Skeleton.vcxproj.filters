@@ -21,9 +21,15 @@
     <ClCompile Include="myKinect.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="detect.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myKinect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="detect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
