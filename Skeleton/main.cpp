@@ -30,8 +30,8 @@ int main()
 		m_num++;
 	} 	
 
-	namedWindow("Demo");
-	setMouseCallback("Demo", onMouse);
+	namedWindow("src");
+	setMouseCallback("src", onMouse);
 	if (SUCCEEDED(hr))
 	{
 		//setMouseCallback("src", onMouse, NULL);
@@ -43,25 +43,22 @@ int main()
 				src = myKinect.Update();
 			}
 			else
-			{
-			
+			{	
 				if (originalPoint != processPoint)
 				{
 					rectangle(src, originalPoint, processPoint, Scalar(255, 0, 0), 2);
 				}
 				int width = abs(originalPoint.x - processPoint.x);
 				int height = abs(originalPoint.y - processPoint.y);
-				imshow("Demo", src);
-				waitKey(1);
 				if (width > 0 && height > 0)
 				{
 					Mat out;
 					out = detect.ShowImage(src, originalPoint, width, height);
-					imshow("out", out);
+					imshow("screenshot", out);
 					waitKey(1);
 				}
 
-				imshow("Demo", src);
+				imshow("src", src);
 				waitKey(1);
 			}
 
@@ -98,6 +95,6 @@ void onMouse(int event, int x, int y, int flags, void *ustc)
 	{
 		leftButtonDownFlag = false;
 		Mat rectImage = src(Rect(originalPoint, processPoint)); //×ÓÍ¼ÏñÏÔÊ¾  
-		imshow("Demo", rectImage);
+		imshow("src", rectImage);
 	}
 }

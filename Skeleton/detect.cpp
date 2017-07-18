@@ -3,7 +3,7 @@
 
 Mat Detect::ShowImage(Mat src, Point originalPoint, int width, int height)
 {
-	m_roi = src(Rect(originalPoint.x, originalPoint.x, width, height));
+	m_roi = src(Rect(originalPoint.x, originalPoint.y, width, height));
 	Mat out;
 	m_roi.copyTo(out);
 	cvtColor(m_roi, m_roi, CV_RGB2GRAY);
@@ -21,14 +21,27 @@ Mat Detect::ShowImage(Mat src, Point originalPoint, int width, int height)
 
 	/*********ÇóÃæ»ý************/
 	vector<vector<Point>> maxContour;
-	double sum = 200 * 200;
+	double sum = width*height;
+	double m_sum = width*height;
+	m_sum = m_sum*0.1;
+	double maxArea = 0;
+	//int flagMaxArea=0;
 	for (size_t a = 0; a < contours.size(); a++)
 	{
 		double area = cv::contourArea(contours[a]);
-		if (area > 0)
+		if (area > maxArea)
 		{
-			sum = sum - area;
+			maxArea = width*height-area;
 		}
+	}
+	cout << maxArea << endl;
+	if (maxArea > m_sum)
+	{
+		cout << "People in" << endl;
+	}
+	else
+	{
+		cout << "Peole out" << endl;
 	}
 	return out;
 
