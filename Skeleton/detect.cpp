@@ -66,11 +66,9 @@ double Detect::ComputeArea(Mat m_src)
 
 	/*********ÇóÃæ»ý************/
 	vector<vector<Point>> maxContour;
-	int width = 424;
-	int height = 512;
+
 	double sum = width*height;
 	double m_sum = width*height;
-	m_sum = m_sum*0.1;
 	double maxArea = 0;
 	//int flagMaxArea=0;
 	for (size_t a = 0; a < contours.size(); a++)

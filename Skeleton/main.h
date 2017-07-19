@@ -8,12 +8,12 @@ using namespace std;
 
 Mat src;//原始图像 
 Mat m_src;
-Point originalPoint; //矩形框起点  
-Point processPoint; //矩形框终点  
+//Point originalPoint; //矩形框起点  
+//Point processPoint; //矩形框终点  
 bool leftButtonDownFlag ; //左键单击后视频暂停播放的标志位  
 bool rightButtonDownFlag;
-vector<Point> beginPoint;
-vector<Point> endPoint;
+//vector<Point> beginPoint;
+//vector<Point> endPoint;
 int  numPoint;
 int m_num;
 int failNum;

@@ -29,9 +29,5 @@ int Check::CheckPoint(Point a, Point randPoint[1][1024], int m_num)
 			}
 		}
 	}
-	if (flag ==0)
-	{
-		cout << "点在直线附近请重新选择" << endl;
-	}
 	return position;
 }

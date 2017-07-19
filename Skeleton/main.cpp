@@ -15,9 +15,6 @@ int main()
 
 	if (SUCCEEDED(hr))
 	{
-		//cout << "输入多边形线条个数:" ;
-		//cin >> numPoint;
-
 		namedWindow("src");
 		setMouseCallback("src", OnMouse);
 		while (1)
@@ -32,7 +29,7 @@ int main()
 				/**************绘制多边形*******/
 				src.copyTo(m_src);
 				m_src.setTo(0);
-
+				waitKey(1);
 				if (m_num > -1)
 				{
 					const Point* ppt[1] = { randPoint[0] };
@@ -50,8 +47,8 @@ int main()
 				}
 				Mat bitM;
 				bitwise_not(src, bitM);
-				src = bitM;
-				bitwise_and(m_src, src, bitM);
+				bitM.copyTo(src);
+				bitwise_and(m_src, bitM, bitM);
 				singleArea = detect.ComputeArea(bitM);
 
 				if (singleArea > 0.1*totalArea)
@@ -65,14 +62,25 @@ int main()
 				const Point* ppt[1] = { randPoint[0] };
 				int npt[] = { m_num };
 				polylines(bitM, ppt, npt, 1, 1, m_color, 2, 8, 0); 				//	polylines()
+				polylines(src, ppt, npt, 1, 1, m_color, 2, 8, 0); 				//	polylines()
+
 				totalArea = detect.ComputeArea(m_src);
 				for (int i = 0; i < m_num; i++)
 				{
 					circle(bitM, randPoint[0][i], raduis, m_color, thickness);
 				}
-				src = bitM;
-				imshow("src", src);
-				waitKey(1);
+	
+				if (totalArea<=0)
+				{
+					imshow("src", src);
+					waitKey(1);
+				}
+				else  if (totalArea>0)
+				{
+					imshow("src", bitM);
+					waitKey(1);
+				}
+					
 			}
 
 			if (waitKey(10) >= 0)
@@ -160,7 +168,24 @@ void OnMouse(int event, int x, int y, int flags, void *ustc)
 			}
 		}
 	}
-
+	/***************鼠标拖拽*************/
+	if (event == CV_EVENT_FLAG_LBUTTON)
+	{
+		int flag = -1;
+		for (int i = 0; i < m_num; i++)
+		{
+			int w = abs(randPoint[0][i].x - x);
+			int h = abs(randPoint[0][i].y - y);
+			if (w<m_thresold&&h<m_thresold)
+			{
+				flag = i;
+			}
+		}
+		if (flag>-1)
+		{
+			randPoint[0][flag] = Point(x, y);
+		}
+	}
 }
 
 void Initial()
