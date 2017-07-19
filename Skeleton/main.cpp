@@ -8,15 +8,15 @@ int main()
 	HRESULT hr = myKinect.InitializeDefaultSensor();
 	while (FAILED(hr))
 	{
-		cout << "连接失败，正在尝试,当前失败次数为:" << m_num << endl;
+		cout << "连接失败，正在尝试,当前失败次数为:" << failNum << endl;
 		hr = myKinect.InitializeDefaultSensor();
-		m_num++;
+		failNum++;
 	} 	
 
 	if (SUCCEEDED(hr))
 	{
-		cout << "输入多边形线条个数:" ;
-		cin >> numPoint;
+		//cout << "输入多边形线条个数:" ;
+		//cin >> numPoint;
 
 		namedWindow("src");
 		setMouseCallback("src", OnMouse);
@@ -38,11 +38,11 @@ int main()
 					const Point* ppt[1] = { randPoint[0] };
 					int npt[] = { m_num };
 					polylines(m_src, ppt, npt, 1, 1, m_color, 2, 8, 0); 				//	polylines()
-					fillPoly(m_src, ppt, npt, 1, Scalar(255,255,255));
+					fillPoly(m_src, ppt, npt, 1, Scalar(255, 255, 255));
 					totalArea = detect.ComputeArea(m_src);
 					for (int i = 0; i < m_num; i++)
 					{
-//						circle(src, randPoint[0][i], raduis, m_color, thickness);
+						//						circle(src, randPoint[0][i], raduis, m_color, thickness);
 						circle(m_src, randPoint[0][i], raduis, m_color, thickness);
 
 					}
@@ -51,10 +51,8 @@ int main()
 				Mat bitM;
 				bitwise_not(src, bitM);
 				src = bitM;
-				//imshow("src", src);
-				//waitKey(1);
 				bitwise_and(m_src, src, bitM);
-			    singleArea = detect.ComputeArea(bitM);
+				singleArea = detect.ComputeArea(bitM);
 
 				if (singleArea > 0.1*totalArea)
 				{
@@ -64,26 +62,17 @@ int main()
 				{
 					cout << "People out" << endl;
 				}
-				if (totalArea > 0)
+				const Point* ppt[1] = { randPoint[0] };
+				int npt[] = { m_num };
+				polylines(bitM, ppt, npt, 1, 1, m_color, 2, 8, 0); 				//	polylines()
+				totalArea = detect.ComputeArea(m_src);
+				for (int i = 0; i < m_num; i++)
 				{
-					const Point* ppt[1] = { randPoint[0] };
-					int npt[] = { m_num };
-					polylines(bitM, ppt, npt, 1, 1, m_color, 2, 8, 0); 				//	polylines()
-					totalArea = detect.ComputeArea(m_src);
-					for (int i = 0; i < m_num; i++)
-					{
-						circle(bitM, randPoint[0][i], raduis, m_color, thickness);
-					}
-					src = bitM;
-					imshow("src", src);		
-					waitKey(1);
+					circle(bitM, randPoint[0][i], raduis, m_color, thickness);
 				}
-				else
-				{
-					imshow("src", src);
-					waitKey(1);
-				}
-			
+				src = bitM;
+				imshow("src", src);
+				waitKey(1);
 			}
 
 			if (waitKey(10) >= 0)
@@ -108,18 +97,11 @@ void OnMouse(int event, int x, int y, int flags, void *ustc)
 	/***********左键添加坐标*****************/
 	if (event == CV_EVENT_LBUTTONDOWN&&leftButtonDownFlag==false)
 	{
-		if (m_num >= numPoint)
-		{
-			m_num = 0;
-		}
+	
 		leftButtonDownFlag = true; //标志位  
 	}
 	if (event == CV_EVENT_LBUTTONUP&&leftButtonDownFlag)
 	{
-		if (m_num >= numPoint)
-		{
-			m_num = 0;		
-		}
 		leftButtonDownFlag = false;
 		int flag = 0;
 		for (int i = 0; i < m_num; i++)
@@ -183,6 +165,7 @@ void OnMouse(int event, int x, int y, int flags, void *ustc)
 
 void Initial()
 {
+	failNum = 0;
 	m_num = 0;
 	totalArea = 0;
 	singleArea = 0;

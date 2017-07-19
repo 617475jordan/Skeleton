@@ -16,6 +16,7 @@ vector<Point> beginPoint;
 vector<Point> endPoint;
 int  numPoint;
 int m_num;
+int failNum;
 int m_thresold = 10;
 int raduis = 2;
 int thickness = 2;
