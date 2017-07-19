@@ -1,20 +1,4 @@
-#include "myKinect.h"
-#include "detect.h"
-#include <iostream>
-using namespace std;
-
-
-bool draw;
-Mat src;//原始图像  
-Mat roi;//ROI图像
-Point cursor;//初始坐标   
-Rect rect;//标记ROI的矩形框
-
-Point originalPoint; //矩形框起点  
-Point processPoint; //矩形框终点  
-bool leftButtonDownFlag = false; //左键单击后视频暂停播放的标志位  
-//鼠标回调函数    
-void onMouse(int event, int x, int y, int flags, void *ustc);
+#include "main.h"
 int main()
 {
 	CBodyBasics myKinect;
@@ -22,7 +6,6 @@ int main()
 
 	//传感器初始化
 	HRESULT hr = myKinect.InitializeDefaultSensor();
-	int m_num = 1;
 	while (FAILED(hr))
 	{
 		cout << "连接失败，正在尝试,当前失败次数为:" << m_num << endl;
@@ -30,11 +13,13 @@ int main()
 		m_num++;
 	} 	
 
-	namedWindow("src");
-	setMouseCallback("src", onMouse);
 	if (SUCCEEDED(hr))
 	{
-		//setMouseCallback("src", onMouse, NULL);
+		cout << "输入多边形线条个数:" ;
+		cin >> numPoint;
+
+		namedWindow("src");
+		setMouseCallback("src", OnMouse);
 		while (1)
 		{
 			src = myKinect.Update();
@@ -43,21 +28,41 @@ int main()
 				src = myKinect.Update();
 			}
 			else
-			{	
-				if (originalPoint != processPoint)
-				{
-					rectangle(src, originalPoint, processPoint, Scalar(255, 0, 0), 2);
-				}
-				int width = abs(originalPoint.x - processPoint.x);
-				int height = abs(originalPoint.y - processPoint.y);
-				if (width > 0 && height > 0)
-				{
+			{
+				/*	if (originalPoint != processPoint)
+					{
+					//rectangle(src, originalPoint, processPoint, Scalar(255, 0, 0), 2);
+					//line(src, originalPoint, processPoint, Scalar(255, 0, 0), 2);
+					}
+					int width = abs(originalPoint.x - processPoint.x);
+					int height = abs(originalPoint.y - processPoint.y);
+					if (width > 0 && height > 0)
+					{
 					Mat out;
 					out = detect.ShowImage(src, originalPoint, width, height);
 					imshow("screenshot", out);
 					waitKey(1);
-				}
+					}
+					*/
 
+				/**************绘制多边形*******/
+				src.copyTo(m_src);
+				m_src.setTo(255);
+
+				if (m_num > 0)
+				{
+					const Point* ppt[1] = { randPoint[0] };
+					int npt[] = { m_num };
+					polylines(m_src, ppt, npt, 1, 1, m_color, 2, 8, 0); 				//	polylines()
+					for (int i = 0; i < m_num; i++)
+					{
+						circle(src, randPoint[0][i], raduis, m_color, thickness);
+						circle(m_src, randPoint[0][i], raduis, m_color, thickness);
+
+					}
+					imshow("m_src", m_src);
+					waitKey(1);
+				}
 				imshow("src", src);
 				waitKey(1);
 			}
@@ -78,23 +83,73 @@ int main()
 	return 0;
 }
 
-void onMouse(int event, int x, int y, int flags, void *ustc)
-{
 
-	if (event == CV_EVENT_LBUTTONDOWN)
+void OnMouse(int event, int x, int y, int flags, void *ustc)
+{
+	/***********左键添加坐标*****************/
+	if (event == CV_EVENT_LBUTTONDOWN&&leftButtonDownFlag==false)
 	{
+		if (m_num >= numPoint)
+		{
+			m_num = 0;
+		}
 		leftButtonDownFlag = true; //标志位  
-		originalPoint = Point(x, y);  //设置左键按下点的矩形起点  
-		processPoint = originalPoint;
 	}
-	if (event == CV_EVENT_MOUSEMOVE&&leftButtonDownFlag)
+	if (event == CV_EVENT_LBUTTONUP&&leftButtonDownFlag)
 	{
-		processPoint = Point(x, y);
+		if (m_num >= numPoint)
+		{
+			m_num = 0;		
+		}
+		leftButtonDownFlag = false;
+		int flag = 0;
+		for (int i = 0; i < m_num; i++)
+		{
+			int widthlen = abs(randPoint[0][i].x - x);
+			int hightlen = abs(randPoint[0][i].y - y);
+			if (widthlen < m_thresold && hightlen < m_thresold)
+			{
+				flag++;
+			}
+		}
+		if (flag == 0 && CheckPoint(Point(x, y), randPoint, m_num))
+		{
+			randPoint[0][m_num] = Point(x, y);
+			m_num++;
+		}	
 	}
-	if (event == CV_EVENT_LBUTTONUP)
+
+	/*********右击删除坐标*************/
+	if (event == CV_EVENT_RBUTTONDOWN&&rightButtonDownFlag == false)
+	{
+		rightButtonDownFlag = true;
+	}
+	if (event == CV_EVENT_RBUTTONUP&&rightButtonDownFlag)
 	{
 		leftButtonDownFlag = false;
-		Mat rectImage = src(Rect(originalPoint, processPoint)); //子图像显示  
-		imshow("src", rectImage);
+		for (int i = 0; i < m_num; i++)
+		{
+			int widthlen = abs(randPoint[0][i].x - x);
+			int hightlen = abs(randPoint[0][i].y - y);
+			if (widthlen < m_thresold && hightlen < m_thresold)
+			{
+				if (i == m_num - 1)
+				{
+					m_num--;
+				}
+				else
+				{
+					randPoint[0][i] = randPoint[0][i+1];
+				}
+			}
+		}
 	}
+
+}
+
+void Initial()
+{
+	m_num = 0;
+	leftButtonDownFlag = false;
+	rightButtonDownFlag = false;
 }

@@ -78,12 +78,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="checkPoint.cpp" />
     <ClCompile Include="detect.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="myKinect.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="checkPoint.h" />
     <ClInclude Include="detect.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="myKinect.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
