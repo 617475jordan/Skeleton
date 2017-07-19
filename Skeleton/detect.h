@@ -11,6 +11,8 @@ class Detect
 {
 public:
 	Mat ShowImage(Mat src, Point originalPoint, int width, int height);
+	double ComputeArea(Mat m_src);
+
 private:
 	Mat elemet = getStructuringElement(MORPH_RECT, Size(3, 3), Point(-1, -1));
 	Scalar p_color = Scalar(0, 0, 255);

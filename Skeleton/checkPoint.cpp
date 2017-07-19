@@ -1,12 +1,13 @@
 #include"checkPoint.h"
 
 //检查点是否在线段附近
-bool Check::CheckPoint(Point a, Point randPoint[1][1024], int m_num)
+int Check::CheckPoint(Point a, Point randPoint[1][1024], int m_num)
 {
 	int flag = 0;
+	int position =-1;
 	if (m_num < 2)
 	{
-		return true;
+		return position;
 	}
 	for (int i = 0; i < m_num - 1; i++)
 	{
@@ -21,19 +22,16 @@ bool Check::CheckPoint(Point a, Point randPoint[1][1024], int m_num)
 			double q_sum = abs(x1*x1 + y1*y1);
 			p_sum = sqrt(p_sum);
 			q_sum = sqrt(q_sum);
-			if (_sum / (p_sum*q_sum) < -threshold)
+			if (_sum / (p_sum*q_sum) < threshold)
 			{
 				flag++;
+				position = i;
 			}
 		}
 	}
-	if (flag >0)
+	if (flag ==0)
 	{
 		cout << "点在直线附近请重新选择" << endl;
-		return false;
 	}
-	else
-	{
-		return true;
-	}
+	return position;
 }

@@ -29,42 +29,61 @@ int main()
 			}
 			else
 			{
-				/*	if (originalPoint != processPoint)
-					{
-					//rectangle(src, originalPoint, processPoint, Scalar(255, 0, 0), 2);
-					//line(src, originalPoint, processPoint, Scalar(255, 0, 0), 2);
-					}
-					int width = abs(originalPoint.x - processPoint.x);
-					int height = abs(originalPoint.y - processPoint.y);
-					if (width > 0 && height > 0)
-					{
-					Mat out;
-					out = detect.ShowImage(src, originalPoint, width, height);
-					imshow("screenshot", out);
-					waitKey(1);
-					}
-					*/
-
 				/**************»æÖÆ¶à±ßÐÎ*******/
 				src.copyTo(m_src);
-				m_src.setTo(255);
+				m_src.setTo(0);
 
-				if (m_num > 0)
+				if (m_num > -1)
 				{
 					const Point* ppt[1] = { randPoint[0] };
 					int npt[] = { m_num };
 					polylines(m_src, ppt, npt, 1, 1, m_color, 2, 8, 0); 				//	polylines()
+					fillPoly(m_src, ppt, npt, 1, Scalar(255,255,255));
+					totalArea = detect.ComputeArea(m_src);
 					for (int i = 0; i < m_num; i++)
 					{
-						circle(src, randPoint[0][i], raduis, m_color, thickness);
+//						circle(src, randPoint[0][i], raduis, m_color, thickness);
 						circle(m_src, randPoint[0][i], raduis, m_color, thickness);
 
 					}
-					imshow("m_src", m_src);
+
+				}
+				Mat bitM;
+				bitwise_not(src, bitM);
+				src = bitM;
+				//imshow("src", src);
+				//waitKey(1);
+				bitwise_and(m_src, src, bitM);
+			    singleArea = detect.ComputeArea(bitM);
+
+				if (singleArea > 0.1*totalArea)
+				{
+					cout << "People in" << endl;
+				}
+				else
+				{
+					cout << "People out" << endl;
+				}
+				if (totalArea > 0)
+				{
+					const Point* ppt[1] = { randPoint[0] };
+					int npt[] = { m_num };
+					polylines(bitM, ppt, npt, 1, 1, m_color, 2, 8, 0); 				//	polylines()
+					totalArea = detect.ComputeArea(m_src);
+					for (int i = 0; i < m_num; i++)
+					{
+						circle(bitM, randPoint[0][i], raduis, m_color, thickness);
+					}
+					src = bitM;
+					imshow("src", src);		
 					waitKey(1);
 				}
-				imshow("src", src);
-				waitKey(1);
+				else
+				{
+					imshow("src", src);
+					waitKey(1);
+				}
+			
 			}
 
 			if (waitKey(10) >= 0)
@@ -83,9 +102,9 @@ int main()
 	return 0;
 }
 
-
 void OnMouse(int event, int x, int y, int flags, void *ustc)
 {
+	Check CheckPoint;
 	/***********×ó¼üÌí¼Ó×ø±ê*****************/
 	if (event == CV_EVENT_LBUTTONDOWN&&leftButtonDownFlag==false)
 	{
@@ -112,11 +131,26 @@ void OnMouse(int event, int x, int y, int flags, void *ustc)
 				flag++;
 			}
 		}
-		if (flag == 0 && CheckPoint(Point(x, y), randPoint, m_num))
+		if (flag == 0)
 		{
-			randPoint[0][m_num] = Point(x, y);
-			m_num++;
+			int position = CheckPoint.CheckPoint(Point(x, y), randPoint, m_num);
+			if (position < 0)
+			{
+				randPoint[0][m_num] = Point(x, y);
+				m_num++;
+			}
+			else
+			{
+				m_num++;
+				for (int k = m_num-1; k>position; k--)
+				{
+					randPoint[0][k] = randPoint[0][k - 1];
+				}
+				randPoint[0][position + 1] = Point(x, y);
+			}
+
 		}	
+	
 	}
 
 	/*********ÓÒ»÷É¾³ý×ø±ê*************/
@@ -150,6 +184,8 @@ void OnMouse(int event, int x, int y, int flags, void *ustc)
 void Initial()
 {
 	m_num = 0;
+	totalArea = 0;
+	singleArea = 0;
 	leftButtonDownFlag = false;
 	rightButtonDownFlag = false;
 }
