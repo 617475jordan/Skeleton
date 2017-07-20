@@ -14,8 +14,8 @@ int Check::CheckPoint(Point a, Point randPoint[1][1024], int m_num)
 		double result = 1;	 //cos×î´óÖµ
 		if (i < m_num - 1)
 		{
-			 result = Compare(a.x - randPoint[0][i].x, a.y - randPoint[0][i].y,
-				a.x - randPoint[0][i+1].x, a.y - randPoint[0][i+1].y);
+			result = Compare(a.x - randPoint[0][i].x, a.y - randPoint[0][i].y,
+				a.x - randPoint[0][i + 1].x, a.y - randPoint[0][i + 1].y);
 			if (result < threshold)
 			{
 				position = i;

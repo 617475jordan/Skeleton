@@ -83,6 +83,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="myKinect.cpp" />
     <ClCompile Include="rectModel.cpp" />
+    <ClCompile Include="rectView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="checkPoint.h" />
@@ -90,6 +91,7 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="myKinect.h" />
     <ClInclude Include="rectModel.h" />
+    <ClInclude Include="rectView.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
