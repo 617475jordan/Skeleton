@@ -33,7 +33,7 @@ int Check::CheckPoint(Point a, Point randPoint[1][1024], int m_num)
 	}
 	return position;
 }
-
+ //计算两点之间的距离
 int Check::ComputeDistance(Point a, Point randPoint[1][1024], int m_num)
 {
 	int flag = 0;

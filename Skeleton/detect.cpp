@@ -34,8 +34,6 @@ double Detect::ComputeArea(Mat m_src)
 	return maxArea;
 }
 
-
-
 Mat Detect::ShowImage(Mat src, Point originalPoint, int width, int height)
 {
 	m_roi = src(Rect(originalPoint.x, originalPoint.y, width, height));

@@ -44,7 +44,6 @@ int main()
 					{
 						//						circle(src, randPoint[0][i], raduis, m_color, thickness);
 						circle(m_src, randPoint[0][i], raduis, m_color, thickness);
-
 					}
 
 				}
@@ -101,90 +100,83 @@ int main()
 void OnMouse(int event, int x, int y, int flags, void *ustc)
 {
 	Check CheckPoint;
-	int moveflag = -1; //点拖拽标记位
 	/***********左键添加坐标*****************/
-	if (event == CV_EVENT_LBUTTONDOWN&&leftButtonDownFlag == false  )
+	if (event == CV_EVENT_LBUTTONDOWN&&leftButtonDownFlag == false)
 	{
 		leftButtonDownFlag = true; //标志位 
+	}
+	if (event == CV_EVENT_MOUSEMOVE &&leftButtonDownFlag)
+	{
 		for (int i = 0; i < m_num; i++)
 		{
 			int widthlen = abs(randPoint[0][i].x - x);
 			int hightlen = abs(randPoint[0][i].y - y);
 			if (widthlen < m_thresold && hightlen < m_thresold)
 			{
-				moveflag = i;
 				randPoint[0][i] = Point(x, y);
 			}
 		}
 	}
-	if (event == CV_EVENT_MOUSEMOVE &&leftButtonDownFlag)
-	{
-		randPoint[0][moveflag] = Point(x, y);
-	}
 	if (event == CV_EVENT_LBUTTONUP&&leftButtonDownFlag)
 	{
 		leftButtonDownFlag = false;
-		if (moveflag > 0)
-		{
-			randPoint[0][moveflag] = Point(x, y);
-		}
-		else
-		{
-			int flag = 0;	   //点是否在直线附近标志位
-			for (int i = 0; i < m_num; i++)
-			{
-				int widthlen = abs(randPoint[0][i].x - x);
-				int hightlen = abs(randPoint[0][i].y - y);
-				if (widthlen < m_thresold && hightlen < m_thresold)
-				{
-					flag++;
-				}
-			}
-			if (flag == 0)
-			{
-				int m_position = CheckPoint.CheckPoint(Point(x, y), randPoint, m_num);
 
-				if (m_position < 0)
-				{
-					randPoint[0][m_num] = Point(x, y);
-					m_num++;
-				}
-			 
-				/**************判断添加点是否在最近************/
-				/**
-				int n_position = CheckPoint.ComputeDistance(Point(x, y), randPoint, m_num);
-				if (m_position < 0)
-				{
-					if (n_position < 0)
-					{
-						randPoint[0][m_num] = Point(x, y);
-						m_num++;
-					}
-					else
-					{
-						for (int k = m_num; k>n_position; k--)
-						{
-							randPoint[0][k] = randPoint[0][k - 1];
-						}
-						randPoint[0][n_position + 1] = Point(x, y);
-						m_num++;
-					}
-				}  */
-				else
-				{
-					m_num++;
-					for (int k = m_num - 1; k > m_position; k--)
-					{
-						randPoint[0][k] = randPoint[0][k - 1];
-					}
-					randPoint[0][m_position + 1] = Point(x, y);
-				}  
+
+		int flag = 0;	   //点是否在直线附近标志位
+		for (int i = 0; i < m_num; i++)
+		{
+			int widthlen = abs(randPoint[0][i].x - x);
+			int hightlen = abs(randPoint[0][i].y - y);
+			if (widthlen < m_thresold && hightlen < m_thresold)
+			{
+				flag++;
 			}
 		}
+		if (flag == 0)
+		{
+			int m_position = CheckPoint.CheckPoint(Point(x, y), randPoint, m_num);
+
+			if (m_position < 0)
+			{
+				randPoint[0][m_num] = Point(x, y);
+				m_num++;
+			}
+
+			/**************判断添加点是否在最近************/
+			/**
+			int n_position = CheckPoint.ComputeDistance(Point(x, y), randPoint, m_num);
+			if (m_position < 0)
+			{
+			if (n_position < 0)
+			{
+			randPoint[0][m_num] = Point(x, y);
+			m_num++;
+			}
+			else
+			{
+			for (int k = m_num; k>n_position; k--)
+			{
+			randPoint[0][k] = randPoint[0][k - 1];
+			}
+			randPoint[0][n_position + 1] = Point(x, y);
+			m_num++;
+			}
+			}  */
+			else
+			{
+				m_num++;
+				for (int k = m_num - 1; k > m_position; k--)
+				{
+					randPoint[0][k] = randPoint[0][k - 1];
+				}
+				randPoint[0][m_position + 1] = Point(x, y);
+			}
+		}
+
 	}
 
 	/*********右击删除坐标*************/
-	if (event == CV_EVENT_RBUTTONDOWN&&rightButtonDownFlag == false && flagLBUTTON == false)
+	if (event == CV_EVENT_RBUTTONDOWN&&rightButtonDownFlag == false)
 	{
 		rightButtonDownFlag = true;
 	}
@@ -219,7 +211,6 @@ void Initial()
 	singleArea = 0;
 	leftButtonDownFlag = false;
 	rightButtonDownFlag = false;
-	flagLBUTTON = false;
 }
 
 void keyOperation()

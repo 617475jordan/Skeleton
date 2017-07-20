@@ -27,6 +27,9 @@
     <ClCompile Include="checkPoint.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="rectModel.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myKinect.h">
@@ -39,6 +42,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="checkPoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rectModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
