@@ -21,21 +21,13 @@ public:
 	bool    judgeRange(float x, float y, float width, float height);
 
 public:
-	//void	drawToImage(Mat dst);
 	vector<Point> deleteCoordinate(Point randPoint[1][1024], int m_num, int x, int y);
 	vector<Point> moveCoordinate(Point randPoint[1][1024], int m_num, int x, int y);
 	vector<Point> addCoordinate(Point randPoint[1][1024], int m_num, int x, int y);
 	vector<Point> pointConvertVector(Point randPoint[1][1024], int m_num);
-	//Point randPoint[1][1024];
-//	list<Point*>			m_pointList;
-
 
 protected:
 	int 		getClickedPoint(Point randPoint[1][1024], int m_num, int x, int y);
 protected:
-//	bool leftButtonDownFlag; //左键单击后视频暂停播放的标志位  
-//	bool rightButtonDownFlag; //右键单击后视频暂停播放的标志位
-	//bool		m_bMouseDown;
-	//Point*		m_pCurrentChoosed;
-	int m_thresold = 20;  //鼠标点击坐标允许误差范围
+	int m_thresold = 10;  //鼠标点击坐标允许误差范围
 };

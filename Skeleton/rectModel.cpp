@@ -56,7 +56,6 @@ bool	rectModel::onMouseLeftUp(float x, float y, float width, float height)
 	{
 		return true;
 	}
-
 }
 bool rectModel::onMouseRightDown(float x, float y, float width, float height)
 {

@@ -263,7 +263,6 @@ void  CBodyBasics::ProcessBody(int nBodyCount, IBody** ppBodies)
 			}
 		}
 	}
-	//return skeletonImg;
 }
 
 
@@ -309,9 +308,6 @@ void CBodyBasics::DrawBone(const Joint* pJoints, const DepthSpacePoint* depthSpa
 	{
 		return;
 	}
-
-//	CvPoint p1 = cvPoint(depthSpacePosition[joint0].X, depthSpacePosition[joint0].Y),
-//		p2 = cvPoint(depthSpacePosition[joint1].X, depthSpacePosition[joint1].Y);
 
 	Point p1 = Point(depthSpacePosition[joint0].X, depthSpacePosition[joint0].Y),
 		p2 = Point(depthSpacePosition[joint1].X, depthSpacePosition[joint1].Y);

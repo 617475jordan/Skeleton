@@ -17,7 +17,6 @@ int Check::checkPoint(Point a, Point randPoint[1][1024], int m_num)
 	}
 	for (int i = 0; i < m_num; i++)
 	{
-
 		double result = 1;	 //cos×î´óÖµ
 		if (i < m_num - 1)
 		{
@@ -54,12 +53,13 @@ int Check::computeDistance(Point a, Point randPoint[1][1024], int m_num)
 		double minLen;
 		minLen = distance(a.x - randPoint[0][0].x, a.x - randPoint[0][m_num - 1].x,
 			a.y - randPoint[0][0].y, a.y - randPoint[0][m_num - 1].y);
+		position = m_num - 1;
 		for (int i = 0; i < m_num-1; i++)
 		{
 			double currentLen;
 			currentLen = distance(a.x - randPoint[0][i].x, a.x - randPoint[0][i+1].x,
 				a.y - randPoint[0][i].y, a.y - randPoint[0][i + 1].y);
-			if (currentLen <= minLen)
+			if (currentLen < minLen)
 			{
 				position = i;
 				minLen = currentLen;

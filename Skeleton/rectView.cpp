@@ -2,7 +2,8 @@
 
 rectView::rectView()
 {
-
+	totalArea = -1;
+	singleArea = -1;
 }
 rectView::~rectView()
 {
@@ -15,20 +16,33 @@ src::图片
 randPoint坐标
 m_num 坐标个数
 flag 是否需要进行填充 1表示需要
+
 */
-Mat  rectView::drawPolygon(Mat src, Point randPoint[1][1024],int m_num,int flag)
+Mat  rectView::drawPolygon(Mat src, Point randPoint[1][1024], int m_num, int flag)
 {
 	Detect detect;
-	const Point* ppt[1] = { randPoint[0] };
-	int npt[] = { m_num };
-	/*智能绘制多边形**/
-	polylines(src, ppt, npt, 1, 1, m_color, 2, 8, 0); 				//	polylines()
+	for (int i = 0; i < m_num; i++)
+	{
+		if (i < m_num - 1)
+		{
+			line(src, randPoint[0][i], randPoint[0][i + 1], m_color, thickness);
+		}
+		else
+		{
+			line(src, randPoint[0][i], randPoint[0][0], m_color, thickness);
+		}
+	}
 	if (flag == 1)
 	{
+		const Point* ppt[1] = { randPoint[0] };
+		int npt[] = { m_num };
+		/*智能绘制多边形**/
+		//polylines(src, ppt, npt, 1, 1, m_color, 2, 8, 0); 				//	polylines()
+
 		fillPoly(src, ppt, npt, 1, Scalar(255, 255, 255));
+		totalArea = detect.ComputeArea(src);
 	}
-	
-	totalArea = detect.ComputeArea(src);
+
 	for (int i = 0; i < m_num; i++)
 	{
 		circle(src, randPoint[0][i], raduis, m_color, thickness);
@@ -51,13 +65,12 @@ Mat rectView::drawImage(Mat src, int m_num, vector<Point> coordinate)
 	
 	if (m_num > -1)
 	{
-		m_src = drawPolygon(m_src, randPoint, m_num,1);	
+		m_src = drawPolygon(m_src, randPoint, m_num, 1);
 	}
 	Mat bitM;
 	bitwise_not(src, bitM);
 	bitM.copyTo(src);
 	bitwise_and(m_src, bitM, bitM);
-
 	Detect detect;
 	singleArea = detect.ComputeArea(bitM);
 
