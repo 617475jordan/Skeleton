@@ -13,11 +13,13 @@ class rectView
 public:
 	rectView();
 	~rectView();
-	Mat DrawImage(Mat src, int m_num, vector<Point> coordinate);
-	Mat  Help(Mat src, int flag);
+	Mat  drawImage(Mat src, int m_num, vector<Point> coordinate);
+	Mat  help(Mat src, int flag);
+	Mat  drawPolygon(Mat src, Point randPoint[1][1024], int m_num,int flag);
 private:
 	Scalar m_color = Scalar(0, 0, 255);	  //点和线的颜色
 	Scalar textColor = Scalar(0, 0, 255);  //文字的颜色
+	int fontFace = 1;
 	int textthickness = 1;				  //文字的厚度
 	int textRaduis = 1;					  //文字半径
 	int lineType = 10;					  //线的类型

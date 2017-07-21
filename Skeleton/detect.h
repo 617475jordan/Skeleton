@@ -11,6 +11,8 @@ class Detect
 {
 public:
 	Mat ShowImage(Mat src, Point originalPoint, int width, int height);
+	Detect();
+	~Detect();
 	double ComputeArea(Mat m_src);
 
 private:

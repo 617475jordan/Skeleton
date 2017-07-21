@@ -1,5 +1,11 @@
 #include "detect.h"
+Detect::Detect()
+{
+}
+Detect::~Detect()
+{
 
+}
 double Detect::ComputeArea(Mat m_src)
 {
 	Mat out, tmp;

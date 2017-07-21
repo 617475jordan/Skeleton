@@ -2,155 +2,112 @@
 #include "math.h"
 rectModel::rectModel()
 {
-	m_bMouseDown = false;
-	m_pCurrentChoosed = NULL;
+	//leftButtonDownFlag = false;
+	//rightButtonDownFlag = false;
 }
 
 rectModel::~rectModel()
 {
-	m_bMouseDown = false;
-	m_pCurrentChoosed = NULL;
+
 }
 
-bool	rectModel::onMouseDown(float x, float y)
+bool rectModel::judgeThreshold(double x, double y)
 {
-	Point* p = getClickedPoint(x, y);
-	if (p)
+	if (x < m_thresold&&y < m_thresold)
 	{
-		m_pCurrentChoosed = p;
+		return true;
 	}
 	else
 	{
-		addPointAtLast(x, y);
+		return false;
 	}
-	m_bMouseDown = true;
-	return false;
 }
 
-bool	rectModel::onMouseMove(float x, float y)
+bool    rectModel::judgeRange(float x, float y, float width, float height)
 {
-	if (!m_bMouseDown)
+	if (x <= width&&y <= height&&x > 0 && y > 0)
+	{
+		return true;
+	}
+	else
 	{
 		return false;
 	}
-
-	if (m_pCurrentChoosed)
+}
+bool	rectModel::onMouseLeftDown(float x, float y, float width, float height)
+{
+	if (judgeRange(x, y, width, height))
 	{
-		m_pCurrentChoosed->x = x;
-		m_pCurrentChoosed->y = y;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	
+}
+bool	rectModel::onMouseLeftUp(float x, float y, float width, float height)
+{
+	if (judgeRange(x, y, width, height))
+	{
+		return false;
+	}
+	else
+	{
 		return true;
 	}
 
 }
-
-bool	rectModel::onMouseUp()
+bool rectModel::onMouseRightDown(float x, float y, float width, float height)
 {
-	m_bMouseDown = false;
-	return false;
-}
-
-bool	rectModel::onMouseRightBtnDown(float x, float y)
-{
-
-}
-
-Point*		rectModel::getClickedPoint(float x, float y)
-{
-	list<Point*>::iterator itr = m_pointList.begin();
-	for (; itr != m_pointList.end();itr++)
+	if (judgeRange(x, y, width, height))
 	{
-		Point* p = *itr;
-		double d = sqrt((x - p->x)*(x - p->x) + (y - p->y)*(y - p->y));
-		if (d <20)
-		{
-			return *itr;
-		}
+		return true;
 	}
-	return 0;
-}
-
-void		rectModel::addPointAtLast(float x, float y)
-{
-	Point* pPoint = new Point;
-	pPoint->x = x;
-	pPoint->y = y;
-	m_pointList.push_back(pPoint);
-}
-
-
-void	drawToImage(Mat dst)
-{
-
-}
-
-
-/***********移动坐标*********************/
-vector<Point> rectModel::MoveCoordinate(Point randPoint[1][1024], int m_num, int x, int y)
-{
-	for (int i = 0; i < m_num; i++)
+	else
 	{
-		int widthlen = abs(randPoint[0][i].x - x);
-		int hightlen = abs(randPoint[0][i].y - y);
-		if (widthlen < m_thresold && hightlen < m_thresold)
-		{
-			randPoint[0][i] = Point(x, y);
-		}
+		return false;
 	}
-	vector<Point> coordinate;
-	for (int i = 0; i < m_num; i++)
-	{
-		coordinate.push_back(randPoint[0][i]);
-	}
-	return coordinate;
 }
-/**********删除坐标**********************/
-vector<Point> rectModel::DeleteCoordinate(Point randPoint[1][1024], int m_num, int x, int y)
+bool rectModel::onMouseRightUp(float x, float y, float width, float height)
 {
-	for (int i = 0; i < m_num; i++)
+	if (judgeRange(x, y, width, height))
 	{
-		int widthlen = abs(randPoint[0][i].x - x);
-		int hightlen = abs(randPoint[0][i].y - y);
-		if (widthlen < m_thresold && hightlen < m_thresold)
-		{
-			if (i == m_num - 1)
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+/**********添加坐标**********************/
+vector<Point> rectModel::addCoordinate(Point randPoint[1][1024], int m_num, int x, int y)
+{
+	Check CheckPoint;
+	int flag = getClickedPoint(randPoint,  m_num, x, y);	   //点是否在直线附近标志位
+
+	if (flag == 0)
+	{
+		int m_position = CheckPoint.checkPoint(Point(x, y), randPoint, m_num);
+		if (m_position < 0)
+		{	
+
+			int n_position = CheckPoint.computeDistance(Point(x, y), randPoint, m_num);
+			if (n_position<-1)
 			{
-				m_num--;
+				randPoint[0][m_num] = Point(x, y);
+				m_num++;
 			}
 			else
 			{
-				randPoint[0][i] = randPoint[0][i + 1];
+				m_num++;
+				for (int k = m_num - 1; k > n_position; k--)
+				{
+					randPoint[0][k] = randPoint[0][k - 1];
+				}
+				randPoint[0][n_position+1] = Point(x, y);
 			}
-		}
-	}
-	vector<Point> coordinate;
-	for (int i = 0; i < m_num; i++)
-	{
-		coordinate.push_back(randPoint[0][i]);
-	}
-	return coordinate;
-}
-/**********添加坐标**********************/
-vector<Point> rectModel::AddCoordinate(Point randPoint[1][1024], int m_num, int x, int y)
-{
-	Check CheckPoint;
-	int flag = 0;	   //点是否在直线附近标志位
-	for (int i = 0; i < m_num; i++)
-	{
-		int widthlen = abs(randPoint[0][i].x - x);
-		int hightlen = abs(randPoint[0][i].y - y);
-		if (widthlen < m_thresold && hightlen < m_thresold)
-		{
-			flag++;
-		}
-	}
-	if (flag == 0)
-	{
-		int m_position = CheckPoint.CheckPoint(Point(x, y), randPoint, m_num);
-
-		if (m_position < 0)
-		{
-			randPoint[0][m_num] = Point(x, y);
-			m_num++;
 		}
 		else
 		{
@@ -163,6 +120,68 @@ vector<Point> rectModel::AddCoordinate(Point randPoint[1][1024], int m_num, int 
 		}
 	}
 	vector<Point> coordinate;
+	coordinate.clear();
+	coordinate = pointConvertVector(randPoint, m_num);
+	return coordinate;
+}
+
+/***********判断点是否在直线附近************************/
+int		rectModel::getClickedPoint(Point randPoint[1][1024], int m_num, int x, int y)
+{
+	int flag = 0;
+	for (int i = 0; i < m_num; i++)
+	{
+		if (judgeThreshold(abs(randPoint[0][i].x - x), abs(randPoint[0][i].y - y)))
+		{
+			flag++;
+		}
+	}
+	return flag;
+}
+/***********移动坐标*********************/
+vector<Point> rectModel::moveCoordinate(Point randPoint[1][1024], int m_num, int x, int y)
+{
+	for (int i = 0; i < m_num; i++)
+	{
+		if (judgeThreshold(abs(randPoint[0][i].x - x), abs(randPoint[0][i].y - y)))
+		{
+			randPoint[0][i] = Point(x, y);
+		}
+	}
+	vector<Point> coordinate;
+	coordinate.clear();
+	coordinate = pointConvertVector(randPoint, m_num);
+	return coordinate;
+}
+/**********删除坐标**********************/
+vector<Point> rectModel::deleteCoordinate(Point randPoint[1][1024], int m_num, int x, int y)
+{
+	int n_num = m_num;
+	int flag=-1;
+	for (int i = 0; i < m_num; i++)
+	{
+		if (judgeThreshold(abs(randPoint[0][i].x - x), abs(randPoint[0][i].y - y)))
+		{
+			flag = i;
+			break;
+		}
+	}
+	for (int i = flag; i < m_num-1; i++)
+	{
+		randPoint[0][i] = randPoint[0][i + 1];
+	}
+	m_num--;
+	vector<Point> coordinate;
+	coordinate.clear();
+	coordinate = pointConvertVector(randPoint, m_num);
+	return coordinate;
+}
+
+/************Point转为Vector类型**********************/
+vector<Point> rectModel::pointConvertVector(Point randPoint[1][1024], int m_num)
+{
+	vector<Point> coordinate;
+	coordinate.clear();
 	for (int i = 0; i < m_num; i++)
 	{
 		coordinate.push_back(randPoint[0][i]);
