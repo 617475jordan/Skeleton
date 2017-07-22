@@ -58,13 +58,13 @@ void onMouse(int event, int x, int y, int flags, void *ustc)
 	/***********×ó¼üÌí¼Ó×ø±ê£¬ÒÆ¶¯×ó¼ü*****************/
 	if (event == CV_EVENT_MOUSEMOVE &&leftButtonDownFlag)
 	{
-		coordinate=rectModel.moveCoordinate(randPoint, m_num, x, y);
+		coordinate = rectModel.moveCoordinate(randPoint, m_num, x, y, width, height);
 	}
 	/***********×ó¼üÌí¼Ó×ø±ê£¬Ì§Æð×ó¼ü*****************/
 	if (event == CV_EVENT_LBUTTONUP&&leftButtonDownFlag)
 	{
 		leftButtonDownFlag = rectModel.onMouseLeftUp(x, y, width, height);
-		coordinate=rectModel.addCoordinate(randPoint, m_num, x, y);
+		coordinate = rectModel.addCoordinate(randPoint, m_num, x, y, width, height);
 	}
 	/*********ÓÒ»÷É¾³ý×ø±ê,°´ÏÂÓÒ¼ü**************/
 	if (event == CV_EVENT_RBUTTONDOWN&&rightButtonDownFlag == false)
