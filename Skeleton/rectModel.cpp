@@ -2,16 +2,13 @@
 #include "math.h"
 rectModel::rectModel()
 {
-	outwidth = false;
-	outheight = false;
 }
 
 rectModel::~rectModel()
 {
-
 }
 
-bool    rectModel::judgeRange(float x, float y, float width, float height)
+bool  rectModel::judgeRange(float x, float y, float width, float height)
 {
 	if (x <= width&&y <= height&&x > 0 && y > 0)
 	{
@@ -79,8 +76,7 @@ bool rectModel::onMouseRightUp(float x, float y, float width, float height)
 		return true;
 	}
 }
-
-
+/***********判断X和Y是否越界******************************/
 int rectModel::judgeXAndY(int a, int b)
 {
 	if (a < 0)
@@ -105,13 +101,13 @@ vector<Point> rectModel::addCoordinate(Point randPoint[1][1024], int m_num, int 
 	if (flag == 0)
 	{
 		int m_position = CheckPoint.checkPoint(Point(x, y), randPoint, m_num);
+		x = judgeXAndY(x, width);
+		y = judgeXAndY(y, height);
 		if (m_position < 0)
 		{	
 			int n_position = CheckPoint.computeDistance(Point(x, y), randPoint, m_num);
 			if (n_position<-1)
 			{
-				x = judgeXAndY(x, width);
-				y = judgeXAndY(y, height);
 				randPoint[0][m_num] = Point(x, y);
 				m_num++;
 			}
@@ -122,8 +118,7 @@ vector<Point> rectModel::addCoordinate(Point randPoint[1][1024], int m_num, int 
 				{
 					randPoint[0][k] = randPoint[0][k - 1];
 				}
-				x = judgeXAndY(x, width);
-				y = judgeXAndY(y, height);
+
 				randPoint[0][n_position+1] = Point(x, y);
 			}
 		}
@@ -134,8 +129,6 @@ vector<Point> rectModel::addCoordinate(Point randPoint[1][1024], int m_num, int 
 			{
 				randPoint[0][k] = randPoint[0][k - 1];
 			}
-			x = judgeXAndY(x, width);
-			y = judgeXAndY(y, height);
 			randPoint[0][m_position + 1] = Point(x, y);
 		}
 	}

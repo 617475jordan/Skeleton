@@ -26,10 +26,6 @@ public:
 	vector<Point> addCoordinate(Point randPoint[1][1024], int m_num, int x, int y, float width, float height);
 	vector<Point> pointConvertVector(Point randPoint[1][1024], int m_num);
 	int judgeXAndY(int a, int b);
-private:
-	bool outwidth;
-	bool outheight;
-	int  tmpwidth, tmpheight;
 protected:
 	int 		getClickedPoint(Point randPoint[1][1024], int m_num, int x, int y);
 protected:
