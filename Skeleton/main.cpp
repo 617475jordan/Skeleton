@@ -7,15 +7,24 @@ int main()
 
 	//传感器初始化
 	HRESULT hr = myKinect.InitializeDefaultSensor();
-	initial();
+	//initial();
 	while (FAILED(hr))
 	{
 		cout << "连接失败，正在尝试,当前失败次数为:" << failNum << endl;
 		hr = myKinect.InitializeDefaultSensor();
 		failNum++;
 	} 	
+/*	VideoCapture capture;
+	capture.open(0);
+	if (!capture.isOpened())
+	{
+		string sz = "退出";
+		MessageBoxA(NULL, sz.c_str(), "摄像头初始化失败", IDOK);
+		return -1;
 
+	}*/
 	if (SUCCEEDED(hr))
+	//else
 	{
 		namedWindow(windowName);
 		setMouseCallback(windowName, onMouse);
@@ -26,10 +35,20 @@ int main()
 			{
 				src = myKinect.Update();
 			}
+
+			/*capture >> src;
+			if (src.empty())
+			{
+				cout << "Can't achieve the Image" << endl;
+				string sz = "退出";
+				MessageBoxA(NULL, sz.c_str(), "无法获取图片", IDOK);
+				return -1;
+			}*/
 			else
 			{
 				width = src.cols;
 				height = src.rows;
+
 				src=rectView.drawImage(src, m_num, coordinate);
 				imshow(windowName, src);
 				waitKey(1);

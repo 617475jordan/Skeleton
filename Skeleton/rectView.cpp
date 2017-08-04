@@ -74,7 +74,8 @@ Mat rectView::drawImage(Mat src, int m_num, vector<Point> coordinate)
 	Detect detect;
 	singleArea = detect.ComputeArea(bitM);
 
-
+	bitwise_not(bitM, bitM);
+	bitwise_not(src, src);
 	bitM = drawPolygon(bitM, randPoint, m_num,0);//绘制线段
 	src = drawPolygon(src, randPoint, m_num, 0);//绘制线段
 	if (totalArea <= 0&&m_num<3)

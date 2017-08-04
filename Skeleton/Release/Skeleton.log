@@ -1,0 +1,39 @@
+﻿Build started 2017/7/25 9:27:49.
+     1>Project "D:\code\Skeleton\Skeleton\Skeleton.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\software\visual_studio_ultimate_2013\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt checkPoint.cpp detect.cpp main.cpp myKinect.cpp rectModel.cpp rectView.cpp
+         checkPoint.cpp
+         detect.cpp
+         main.cpp
+     1>main.cpp(75): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>main.cpp(80): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>main.cpp(85): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>main.cpp(86): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>main.cpp(91): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>main.cpp(96): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+         myKinect.cpp
+     1>myKinect.cpp(145): warning C4244: '=' : conversion from 'UINT16' to 'uchar', possible loss of data
+     1>myKinect.cpp(289): warning C4244: 'argument' : conversion from 'const float' to 'int', possible loss of data
+     1>myKinect.cpp(312): warning C4244: 'argument' : conversion from 'const float' to 'int', possible loss of data
+     1>myKinect.cpp(313): warning C4244: 'argument' : conversion from 'const float' to 'int', possible loss of data
+         rectModel.cpp
+     1>rectModel.cpp(117): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>rectModel.cpp(118): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>rectModel.cpp(173): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>rectModel.cpp(174): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+         rectView.cpp
+       Link:
+         D:\software\visual_studio_ultimate_2013\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\code\Skeleton\Release\Skeleton.exe" /INCREMENTAL:NO /NOLOGO kinect20.lib opencv_calib3d2410d.lib opencv_contrib2410d.lib opencv_core2410d.lib opencv_features2d2410d.lib opencv_flann2410d.lib opencv_gpu2410d.lib opencv_highgui2410d.lib opencv_imgproc2410d.lib opencv_legacy2410d.lib opencv_ml2410d.lib opencv_nonfree2410d.lib opencv_objdetect2410d.lib opencv_ocl2410d.lib opencv_photo2410d.lib opencv_stitching2410d.lib opencv_superres2410d.lib opencv_ts2410d.lib opencv_video2410d.lib opencv_videostab2410d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\code\Skeleton\Release\Skeleton.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\code\Skeleton\Release\Skeleton.lib" /MACHINE:X86 /SAFESEH Release\checkPoint.obj
+         Release\detect.obj
+         Release\main.obj
+         Release\myKinect.obj
+         Release\rectModel.obj
+         Release\rectView.obj
+         Generating code
+         Finished generating code
+         Skeleton.vcxproj -> D:\code\Skeleton\Release\Skeleton.exe
+     1>Done Building Project "D:\code\Skeleton\Skeleton\Skeleton.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:04.86

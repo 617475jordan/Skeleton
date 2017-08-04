@@ -92,11 +92,24 @@ int rectModel::judgeXAndY(int a, int b)
 		return a;
 	}
 }
+/********第一个点为fasle,第二个点位true*************************/
+bool rectModel::judgeLine(double x0, double x1, double y0, double y1)
+{
+	Check CheckPoint;
+	if (CheckPoint.compare(x0, x1, y0, y1) < 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
 /**********添加坐标**********************/
 vector<Point> rectModel::addCoordinate(Point randPoint[1][1024], int m_num, int x, int y, float width, float height)
 {
 	Check CheckPoint;
-	int flag = getClickedPoint(randPoint,  m_num, x, y);	   //点是否在直线附近标志位
+	int flag = getClickedPoint(randPoint, m_num, x, y);	   //点是否在直线附近标志位
 
 	if (flag == 0)
 	{
@@ -104,7 +117,7 @@ vector<Point> rectModel::addCoordinate(Point randPoint[1][1024], int m_num, int 
 		x = judgeXAndY(x, width);
 		y = judgeXAndY(y, height);
 		if (m_position < 0)
-		{	
+		{
 			int n_position = CheckPoint.computeDistance(Point(x, y), randPoint, m_num);
 			if (n_position<-1)
 			{
@@ -119,7 +132,7 @@ vector<Point> rectModel::addCoordinate(Point randPoint[1][1024], int m_num, int 
 					randPoint[0][k] = randPoint[0][k - 1];
 				}
 
-				randPoint[0][n_position+1] = Point(x, y);
+				randPoint[0][n_position + 1] = Point(x, y);
 			}
 		}
 		else
@@ -137,7 +150,6 @@ vector<Point> rectModel::addCoordinate(Point randPoint[1][1024], int m_num, int 
 	coordinate = pointConvertVector(randPoint, m_num);
 	return coordinate;
 }
-
 /***********判断点是否在直线附近************************/
 int		rectModel::getClickedPoint(Point randPoint[1][1024], int m_num, int x, int y)
 {
